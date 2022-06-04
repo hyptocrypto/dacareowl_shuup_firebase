@@ -1,0 +1,72 @@
+{% extends "shuup/front/dashboard/dashboard.jinja" %}
+{% from "shuup_firebase_auth/macros/address.jinja" import render_address_forms, render_address_forms_js %}
+{% from "shuup_firebase_auth/macros/buttons.jinja" import save_changes_button %}
+{% from "shuup_firebase_auth/macros/contact.jinja" import render_person_contact_form %}
+
+{% block title %}{% trans %}User account information{% endtrans %}{% endblock %}
+{% block content_title %}{% trans %}User account information{% endtrans %}{% endblock %}
+
+{% block breadcrumb %}
+    {% call macros.breadcrumb() %}
+        {{ macros.render_breadcrumb_item("/", _("Home")) }}
+        {{ macros.render_breadcrumb_item(url("shuup:dashboard"), _("Dashboard")) }}
+        {{ macros.render_breadcrumb_item(None, _("User account information"), True) }}
+    {% endcall %}
+{% endblock %}
+
+{% block dashboard_content %}
+    <div class="user-account">
+        <form role="form" method="post" action="">
+            {% csrf_token %}
+            {% for field in form.contact.hidden_fields() %}{{ field|safe }}{% endfor %}
+            <p id="firebaseui-auth-container-reset-password-msg"></p>
+            <div class="btn-toolbar pull-right" role="toolbar">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-primary password-reset-button">
+                        <i class="fa fa-cog"></i> {% trans %}Reset password{% endtrans %}
+                    </button>
+                </div>
+                {{ save_changes_button() }}
+            </div>
+            <div class="clearfix"></div>
+            {{ render_person_contact_form(form.contact) }}
+            {{ render_address_forms(
+                (form.billing if "billing" in form.form_defs else None),
+                (form.shipping if "shipping" in form.form_defs else None)) }}
+            <div class="btn-toolbar pull-right" role="toolbar">
+                {{ save_changes_button() }}
+            </div>
+            <div class="clearfix"></div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    {{ render_address_forms_js() }}
+    <script>
+        window.addEventListener('load', function() {
+            if (window.firebase) {
+                firebase.auth().useDeviceLanguage();
+            }
+        });
+        window.sendResetPasswordEmail = function sendResetPasswordEmail() {
+            var user = firebase.auth().currentUser;
+            firebase.auth().sendPasswordResetEmail(user.email).then(function() {
+                const p = $("<p>")
+                    .text(interpolate("Password reset email sent to %s.", [user.email]))
+                $("#firebaseui-auth-container-reset-password-msg").html(p);
+                window.location = "/logout/";
+            }).catch(function(error) {
+                const p = $("<p>")
+                    .text(gettext("Sending password reset email failed. Please try again later."))
+                $("#firebaseui-auth-container-reset-password-msg").html(p);
+            });
+        }
+
+        $(".password-reset-button").on("click", () => {
+            if (confirm(gettext("Are you sure? You will be logged out and sent email with instructions to reset your password."))) {
+                window.sendResetPasswordEmail();
+            }
+        })
+    </script>
+{% endblock %}

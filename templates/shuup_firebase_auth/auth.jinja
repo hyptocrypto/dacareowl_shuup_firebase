@@ -1,0 +1,50 @@
+{% extends "shuup/front/base.jinja" %}
+
+{% block title %}{% trans %}Authenticate{% endtrans %}{% endblock %}
+
+{% block content %}
+    {% placeholder "auth_top" %}
+        {% column {"sm": 12} %}
+            {% plugin "text" %}
+                text = "<h1 class='text-center'>Log in</h1>"
+            {% endplugin %}
+        {% endcolumn %}
+    {% endplaceholder %}
+
+    {% if user and user.is_authenticated %}
+        <div class="message-box">
+            <h1 class="text-center mt-0 mb-5">{{ _('You are already logged in') }}</h1>
+        </div>
+    {% else %}
+        <div id="firebaseui-auth-container" class="text-center">
+            Hellot here
+            {{ _("Loading...") }}
+        </div>
+        
+        <div id="firebase-forgot-password" style="display: none;">
+            <p class="text-center">
+                <a href="{{ url('shuup_firebase_auth:reset-password') }}">{{ _('Forgot password?') }}</a>
+            </p>
+        </div>
+    {% endif %}
+
+    {% placeholder "auth_bottom" %}{% endplaceholder %}
+{% endblock %}
+
+{% block extrajs %}
+    <script>
+        window.addEventListener('load', function() {
+            if (window.firebaseui && window.firebase && window.configureUIAuth && document.getElementById("firebaseui-auth-container")) {
+                window.configureUIAuth(
+                    document.getElementById("firebaseui-auth-container"),
+                    {
+                        actionUrl: "{{ url('shuup_firebase_auth:auth') }}",
+                        isShopAdmin: {{ shuup.general.is_shop_admin()|json }},
+                        providers: {{ get_firebase_auth_providers()|json }},
+                        providerArgs: {{ get_firebase_auth_provider_args()|json }},
+                    }
+                );
+            }
+        });
+    </script>
+{% endblock %}

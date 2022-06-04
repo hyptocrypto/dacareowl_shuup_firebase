@@ -1,0 +1,58 @@
+{% macro render_firebase_auth_styles() %}
+<link rel="stylesheet" href="{{ shuup_static('shuup-firebase-auth.css', 'shuup-firebase-auth') }}" />
+{% endmacro %}
+
+{% macro render_firebase_auth_login_form() %}
+    {% set auth_providers = get_firebase_auth_providers() %}
+    <form name="social-auth-form" action="{{ url('shuup:firebase-auth.login') }}" method="post">
+        {% csrf_token %}
+        <div class="social-auth-button-container">
+            {% if "facebook" in auth_providers %}
+            <button type="button" class="btn btn-lg btn-block btn-social-auth btn-social-auth-facebook" data-provider="facebook">
+                <i class="fa fa-facebook-f"></i>{{ _("Log in with Facebook") }}
+            </button>
+            {% endif %}
+            {% if "google" in auth_providers %}
+            <button type="button" class="btn btn-lg btn-block btn-social-auth btn-social-auth-google" data-provider="google">
+                <i class="fa fa-google"></i>{{ _("Log in with Google") }}
+            </button>
+            {% endif %}
+            {% if "apple" in auth_providers %}
+            <button type="button" class="btn btn-lg btn-block btn-social-auth btn-social-auth-apple" data-provider="apple">
+                <i class="fa fa-apple"></i>{{ _("Log in with Apple") }}
+            </button>
+            {% endif %}
+        </div>
+    </form>
+{% endmacro %}
+
+{% macro render_firebase_auth_register_form() %}
+    {% set auth_providers = get_firebase_auth_providers() %}
+    <form name="social-auth-form" action="{{ url('shuup:firebase-auth.register') }}" method="post">
+        {% csrf_token %}
+        <div class="social-auth-button-container">
+            {% if "facebook" in auth_providers %}
+            <button type="button" class="btn btn-lg btn-block btn-social-auth btn-social-auth-facebook" data-provider="facebook">
+                <i class="fa fa-facebook-f"></i>{{ _("Register with Facebook") }}
+            </button>
+            {% endif %}
+            {% if "google" in auth_providers %}
+            <button type="button" class="btn btn-lg btn-block btn-social-auth btn-social-auth-google" data-provider="google">
+                <i class="fa fa-google"></i>{{ _("Register with Google") }}
+            </button>
+            {% endif %}
+            {% if "apple" in auth_providers %}
+            <button type="button" class="btn btn-lg btn-block btn-social-auth btn-social-auth-apple" data-provider="apple">
+                <i class="fa fa-apple"></i>{{ _("Register with Apple") }}
+            </button>
+            {% endif %}
+        </div>
+    </form>
+{% endmacro %}
+
+{% macro render_firebase_auth_scripts() %}
+    <script>
+        window.FirebaseAuthConfig = {{ get_firebase_settings()|json }};
+    </script>
+    <script src="{{ shuup_static('shuup-firebase-auth.js', 'shuup-firebase-auth') }}"></script>
+{% endmacro %}

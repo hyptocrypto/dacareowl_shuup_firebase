@@ -1,0 +1,10 @@
+{% extends "shuup/front/base.jinja" %}
+
+{% block title %}{% trans %}Logged out{% endtrans %}{% endblock %}
+
+{% block content %}
+    {% placeholder "logout" %}{% endplaceholder %}
+    <h2 class="text-center">
+        {{ _("You have been logged out. Thank you for visiting!") }}
+    </h2>
+{% endblock %}
