@@ -54,7 +54,7 @@ class BaseFirebaseRegistrationForm(forms.Form):
         # They will then recive the email verification email, after verify the email, a parent account is created in the shuup end. This leads to login issues.
         if Contact.objects.filter(email=token_data.get("email")).exists():
             firebase_auth.delete_user(firebase_user.uid)
-            messages.add_message(self.request, messages.WARNING, _("It looks like you are trying to create an account with an exisiting account. Please make sure you are using the correct login method."))
+            messages.add_message(self.request, messages.WARNING, _("It looks like you are trying to create an account with an existing account email. Please make sure you are using the correct login method."))
             return HttpResponseRedirect(reverse("shuup_firebase_auth:auth"))
 
         data.update(
