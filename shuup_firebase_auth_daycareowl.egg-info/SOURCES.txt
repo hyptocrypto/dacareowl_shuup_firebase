@@ -1,0 +1,14 @@
+setup.cfg
+setup.py
+./migrations/0001_initial.py
+./migrations/__init__.py
+./templatetags/__init__.py
+./views/__init__.py
+./views/auth.py
+./views/customer_information.py
+./views/login.py
+./views/register.py
+shuup_firebase_auth_daycareowl.egg-info/PKG-INFO
+shuup_firebase_auth_daycareowl.egg-info/SOURCES.txt
+shuup_firebase_auth_daycareowl.egg-info/dependency_links.txt
+shuup_firebase_auth_daycareowl.egg-info/top_level.txt
