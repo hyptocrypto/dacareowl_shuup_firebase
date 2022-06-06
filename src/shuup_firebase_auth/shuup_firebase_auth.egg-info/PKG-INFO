@@ -1,0 +1,13 @@
+Metadata-Version: 2.1
+Name: shuup-firebase-auth
+Version: 0.0.1
+Summary: Firebase auth for shuup
+Home-page: https://github.com/hyptocrypto/daycareowl_shuup_firebase
+Author: Julian Baumgartner
+Author-email: germanp34e@aol.com
+Project-URL: Bug Tracker, https://github.com/hyptocrypto/daycareowl_shuup_firebase/issues
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
