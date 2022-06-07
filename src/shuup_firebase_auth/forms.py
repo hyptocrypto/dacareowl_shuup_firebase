@@ -48,11 +48,13 @@ class BaseFirebaseRegistrationForm(forms.Form):
 
         firebase_user = firebase_auth.get_user_by_email(token_data["email"])
 
+        
         #NOTE This is a check to prevent a user from accidentialy creating a parent/contact when trying to login as a daycare.
         # User Story Issue: User registers as a daycare, is waiting for approval, goes to singin via the logical singin button leading to /auth.
         # They then input the email and password used when regsitering the daycare, this leads to firebase creating a user account for them.
         # They will then recive the email verification email, after verify the email, a parent account is created in the shuup end. This leads to login issues.
         if Contact.objects.filter(email=token_data.get("email")).exists():
+            #TODO Test if this should be contact or user
             firebase_auth.delete_user(firebase_user.uid)
             messages.add_message(self.request, messages.WARNING, _("It looks like you are trying to create an account with an existing account email. Please make sure you are using the correct login method."))
             return HttpResponseRedirect(reverse("shuup_firebase_auth:auth"))
